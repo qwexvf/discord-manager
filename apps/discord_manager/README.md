@@ -1,0 +1,3 @@
+# DiscordManager
+
+**TODO: Add description**
