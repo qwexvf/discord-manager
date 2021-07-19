@@ -13,6 +13,11 @@ use Mix.Config
 config :discord_manager,
   ecto_repos: [DiscordManager.Repo]
 
+config :discord_manager, Oban,
+  repo: DiscordManager.Repo,
+  plugins: [],
+  queues: [default: 10, events: 50, media: 20]
+
 config :discord_manager_web,
   ecto_repos: [DiscordManager.Repo],
   generators: [context_app: :discord_manager]

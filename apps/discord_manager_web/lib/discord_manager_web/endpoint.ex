@@ -16,6 +16,8 @@ defmodule DiscordManagerWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
+  plug CORSPlug
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
@@ -41,9 +43,12 @@ defmodule DiscordManagerWeb.Endpoint do
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
     pass: ["*/*"],
-    json_decoder: Phoenix.json_library()
+    json_decoder: Jason
+
+  plug Absinthe.Plug,
+    schema: DiscordManagerWeb.Schema
 
   plug Plug.MethodOverride
   plug Plug.Head

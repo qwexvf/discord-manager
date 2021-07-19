@@ -4,6 +4,8 @@ specifiers:
   '@apollo/client': ^3.3.21
   '@fontsource/fira-mono': ^4.2.2
   '@lukeed/uuid': ^2.0.0
+  '@rollup/plugin-graphql': ^1.0.0
+  '@rollup/plugin-replace': ^3.0.0
   '@sveltejs/kit': next
   '@types/cookie': ^0.4.0
   '@typescript-eslint/eslint-plugin': ^4.19.0
@@ -19,6 +21,7 @@ specifiers:
   prettier-plugin-svelte: ^2.2.0
   sass: ^1.35.2
   svelte: ^3.34.0
+  svelte-apollo: ^0.4.0
   svelte-check: ^2.0.0
   svelte-preprocess: ^4.0.0
   tslib: ^2.0.0
@@ -28,9 +31,12 @@ dependencies:
   '@apollo/client': 3.3.21_graphql@15.5.1
   '@fontsource/fira-mono': 4.5.0
   '@lukeed/uuid': 2.0.0
+  '@rollup/plugin-graphql': 1.0.0_graphql@15.5.1
+  '@rollup/plugin-replace': 3.0.0
   carbon-icons-svelte: 10.35.0
   cookie: 0.4.1
   graphql: 15.5.1
+  svelte-apollo: 0.4.0_4fadafd26aa25901f12f02dc726c7628
 
 devDependencies:
   '@sveltejs/kit': 1.0.0-next.131_svelte@3.38.3
@@ -177,13 +183,43 @@ packages:
       fastq: 1.11.1
     dev: true
 
+  /@rollup/plugin-graphql/1.0.0_graphql@15.5.1:
+    resolution: {integrity: sha512-AxeXpotdweLUh9M8p8Cr4x0SQOCJHogntW5NmZeIQ0KT1Bj7SI88aokagn3tjBCr+uTkoeLnsSH0qE4hKydpMg==}
+    peerDependencies:
+      graphql: '>=0.9.0'
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/pluginutils': 4.1.1
+      graphql: 15.5.1
+      graphql-tag: 2.12.5_graphql@15.5.1
+    dev: false
+
+  /@rollup/plugin-replace/3.0.0:
+    resolution: {integrity: sha512-3c7JCbMuYXM4PbPWT4+m/4Y6U60SgsnDT/cCyAyUKwFHg7pTSfsSQzIpETha3a3ig6OdOKzZz87D9ZXIK3qsDg==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0
+      magic-string: 0.25.7
+    dev: false
+
+  /@rollup/pluginutils/3.1.0:
+    resolution: {integrity: sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0
+    dependencies:
+      '@types/estree': 0.0.39
+      estree-walker: 1.0.1
+      picomatch: 2.3.0
+    dev: false
+
   /@rollup/pluginutils/4.1.1:
     resolution: {integrity: sha512-clDjivHqWGXi7u+0d2r2sBi4Ie6VLEAzWMIkvJLnDmxoOhBYOTfzGbOQBA32THHm11/LiJbd01tJUpJsbshSWQ==}
     engines: {node: '>= 8.0.0'}
     dependencies:
       estree-walker: 2.0.2
       picomatch: 2.3.0
-    dev: true
 
   /@sveltejs/kit/1.0.0-next.131_svelte@3.38.3:
     resolution: {integrity: sha512-izTzzUbxTVuW+uwzCg5ltaCF4DZaD8fGI88IGb3fQ3qcmfRQi/vQUZuyfKc1CYxRDVohvaBSMQUQYie4AM6jGQ==}
@@ -223,6 +259,10 @@ packages:
   /@types/cookie/0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
     dev: true
+
+  /@types/estree/0.0.39:
+    resolution: {integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==}
+    dev: false
 
   /@types/json-schema/7.0.8:
     resolution: {integrity: sha512-YSBPTLTVm2e2OoQIDYx8HaeWJ5tTToLH67kXR7zYNGupXMEHa2++G8k+DczX2cFVgalypqtyZIcU19AFcmOpmg==}
@@ -775,9 +815,12 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
+  /estree-walker/1.0.1:
+    resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
+    dev: false
+
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
-    dev: true
 
   /esutils/2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
@@ -1075,7 +1118,6 @@ packages:
     resolution: {integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==}
     dependencies:
       sourcemap-codec: 1.4.8
-    dev: true
 
   /merge2/1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
@@ -1188,7 +1230,6 @@ packages:
   /picomatch/2.3.0:
     resolution: {integrity: sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==}
     engines: {node: '>=8.6'}
-    dev: true
 
   /postcss/8.3.5:
     resolution: {integrity: sha512-NxTuJocUhYGsMiMFHDUkmjSKT3EdH4/WbGF6GCi1NDGk+vbcUTun4fpbOqaPtD8IIsztA2ilZm2DhYCuyN58gA==}
@@ -1366,7 +1407,6 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
-    dev: true
 
   /sprintf-js/1.0.3:
     resolution: {integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=}
@@ -1413,6 +1453,18 @@ packages:
     dependencies:
       has-flag: 4.0.0
     dev: true
+
+  /svelte-apollo/0.4.0_4fadafd26aa25901f12f02dc726c7628:
+    resolution: {integrity: sha512-VbianysptRx9wy6vQPd2lIRBVKV0XPtrSvqcMctihc5xGl1TVffNp8qsiSlqx2jnOlvOGUSK8xl4GW7C6bzSjw==}
+    peerDependencies:
+      '@apollo/client': ^3.2.0
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+      svelte: ^3.0.0
+    dependencies:
+      '@apollo/client': 3.3.21_graphql@15.5.1
+      graphql: 15.5.1
+      svelte: 3.38.3
+    dev: false
 
   /svelte-check/2.2.3_sass@1.35.2+svelte@3.38.3:
     resolution: {integrity: sha512-mqe/lgF0Ew+54YI4bPW5D26sMolh+MofQiz41U0c1GvUsP3bKsLLH0mjs4P4Xc+ajUFJtvGBo5PWaf0dd46sIQ==}

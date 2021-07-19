@@ -3,6 +3,7 @@ defmodule DiscordManagerWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug DiscordManagerWeb.Plugs.Context
   end
 
   scope "/api", DiscordManagerWeb do
@@ -23,5 +24,10 @@ defmodule DiscordManagerWeb.Router do
       pipe_through [:fetch_session, :protect_from_forgery]
       live_dashboard "/dashboard", metrics: DiscordManagerWeb.Telemetry
     end
+  end
+
+  scope "/graphql" do
+    pipe_through [:api]
+    forward "/", Absinthe.Plug, schema: DiscordManagerWeb.Schema
   end
 end

@@ -33,8 +33,11 @@
     "@apollo/client": "^3.3.21",
     "@fontsource/fira-mono": "^4.2.2",
     "@lukeed/uuid": "^2.0.0",
+    "@rollup/plugin-graphql": "^1.0.0",
+    "@rollup/plugin-replace": "^3.0.0",
     "carbon-icons-svelte": "^10.35.0",
     "cookie": "^0.4.1",
-    "graphql": "^15.5.1"
+    "graphql": "^15.5.1",
+    "svelte-apollo": "^0.4.0"
   }
 }

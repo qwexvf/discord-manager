@@ -1,7 +1,6 @@
 defmodule DiscordManager.MixProject do
   use Mix.Project
-
-  def project do
+def project do
     [
       app: :discord_manager,
       version: "0.1.0",
@@ -39,7 +38,10 @@ defmodule DiscordManager.MixProject do
       {:phoenix_pubsub, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:oban, "~> 2.7"},
+      {:guardian, "~> 2.0"},
+      {:argon2_elixir, "~> 2.0"}
     ]
   end
 
