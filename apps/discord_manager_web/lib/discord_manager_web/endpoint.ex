@@ -1,5 +1,6 @@
 defmodule DiscordManagerWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :discord_manager_web
+  use Absinthe.Phoenix.Endpoint
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -16,7 +17,6 @@ defmodule DiscordManagerWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
-  plug CORSPlug
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -42,13 +42,11 @@ defmodule DiscordManagerWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
+  plug CORSPlug
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
     pass: ["*/*"],
     json_decoder: Jason
-
-  plug Absinthe.Plug,
-    schema: DiscordManagerWeb.Schema
 
   plug Plug.MethodOverride
   plug Plug.Head

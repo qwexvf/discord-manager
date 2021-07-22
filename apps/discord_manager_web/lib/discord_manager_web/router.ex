@@ -2,32 +2,29 @@ defmodule DiscordManagerWeb.Router do
   use DiscordManagerWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json"] # plug DiscordManagerWeb.Plugs.Context
     plug DiscordManagerWeb.Plugs.Context
   end
 
-  scope "/api", DiscordManagerWeb do
-    pipe_through :api
+  scope "/graphql" do
+    pipe_through [:api]
+    forward "/", Absinthe.Plug,
+      schema: DiscordManagerWeb.Schema,
+      socket: DiscordManagerWeb.UserSocket
   end
 
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
+
+    scope "/graphiql" do
+      forward "/", Absinthe.Plug.GraphiQL,
+      schema: DiscordManagerWeb.Schema,
+      socket: DiscordManagerWeb.UserSocket
+    end
 
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
       live_dashboard "/dashboard", metrics: DiscordManagerWeb.Telemetry
     end
-  end
-
-  scope "/graphql" do
-    pipe_through [:api]
-    forward "/", Absinthe.Plug, schema: DiscordManagerWeb.Schema
   end
 end

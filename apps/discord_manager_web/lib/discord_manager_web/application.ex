@@ -10,9 +10,10 @@ defmodule DiscordManagerWeb.Application do
       # Start the Telemetry supervisor
       DiscordManagerWeb.Telemetry,
       # Start the Endpoint (http/https)
-      DiscordManagerWeb.Endpoint
+      DiscordManagerWeb.Endpoint,
       # Start a worker by calling: DiscordManagerWeb.Worker.start_link(arg)
       # {DiscordManagerWeb.Worker, arg}
+      {Absinthe.Subscription, DiscordManagerWeb.Endpoint}, # add this line
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

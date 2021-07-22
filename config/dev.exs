@@ -26,6 +26,10 @@ config :discord_manager_web, DiscordManagerWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+config :discord_manager, DiscordManager.Guardian,
+       issuer: "discord_manager",
+       secret_key: "Secret key. You can use `mix guardian.gen.secret` to get one"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

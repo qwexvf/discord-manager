@@ -18,9 +18,11 @@ defmodule DiscordManager.Servers do
       [%Schedule{}, ...]
 
   """
-  def list_schedules do
-    Repo.all(Schedule)
-    |> Repo.preload(:job)
+  def list_schedules(user_id) do
+    Schedule
+    |> where([s], s.user_id == ^user_id)
+    |> preload([:user, :job])
+    |> Repo.all()
   end
 
   def run_all do
@@ -41,7 +43,13 @@ defmodule DiscordManager.Servers do
       ** (Ecto.NoResultsError)
 
   """
-  def get_schedule!(id), do: Repo.get!(Schedule, id)
+  def get_schedule!(id, user_id) do
+    Schedule
+    |> where([s], s.user_id == ^user_id)
+    |> where([s], s.id == ^id)
+    |> preload([:user, :job])
+    |> Repo.one()
+  end
 
   @doc """
   Creates a schedule.
@@ -55,16 +63,15 @@ defmodule DiscordManager.Servers do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_schedule(attrs \\ %{}) do
+  def create_schedule(user_id, attrs \\ %{}) do
     %{}
     |> ScheduleWorker.new(queue: :special, max_attempts: 5, schedule_in: 10)
     |> Oban.insert()
-    |> IO.inspect
     |> case do
       {:error, _changeset} ->
         :noop
       {:ok, job} ->
-        %Schedule{job_id: job.id}
+        %Schedule{user_id: user_id, job_id: job.id}
         |> Schedule.changeset(attrs)
         |> Repo.insert()
     end
@@ -82,7 +89,7 @@ defmodule DiscordManager.Servers do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_schedule(%Schedule{} = schedule, attrs) do
+  def update_schedule(%Schedule{} = schedule, user_id, attrs) do
     schedule
     |> Schedule.changeset(attrs)
     |> Repo.update()

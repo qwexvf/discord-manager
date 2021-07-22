@@ -8,6 +8,8 @@ defmodule DiscordManager.Accounts.User do
     field :password, :string, virtual: true
     field :name, :string
 
+    has_many :schedules, DiscordManager.Servers.Schedule
+
     timestamps()
   end
 

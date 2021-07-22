@@ -1,15 +1,21 @@
 <script lang=ts>
-	import { Button, Modal } from "carbon-components-svelte"
-  import { updateTheme } from "../stores/app"
-  import { client } from "../apollo"
-  import { SCHEDULES } from "../apollo/queries"
   import {
+    Button,
+    Modal,
     DataTable,
     OverflowMenu,
     OverflowMenuItem,
-    TextInput
-  } from "carbon-components-svelte";
-  import { onMount } from 'svelte';
+    TextInput,
+    Toolbar,
+    ToolbarContent,
+    ToolbarMenu,
+    ToolbarMenuItem,
+    DataTableSkeleton
+  } from "carbon-components-svelte"
+  import { SCHEDULES } from "../apollo/queries"
+  import { UPDATE_SCHEDULE, CREATE_SCHEDULE } from "../apollo/mutations"
+  import { browser } from '$app/env'
+  import { query, mutation, subscribe, getClient } from "svelte-apollo"
 
   const headers = [
     { key: "id", value: "ID" },
@@ -18,57 +24,120 @@
     { key: "overflow", empty: true },
   ];
 
-  let rows: Array<{id: number, message: string}>
+  let open = false
 
-  const fetchSchedules = async () => {
-    const {
-      data: { schedules }
-    } = await client.query({
-      query: SCHEDULES,
+  const scheduleList = query(SCHEDULES)
+  const updateSchedule = mutation(UPDATE_SCHEDULE)
+  const createSchedule = mutation(CREATE_SCHEDULE)
+
+  scheduleList.refetch();
+
+  const submitSchedule = async () => {
+    createSchedule({
+      variables: {
+        attrs: {
+          message: formData.message
+        }
+      },
+      refetchQueries: [{
+        query: SCHEDULES
+      }]
     })
-
-    console.log(schedules)
-
-    rows = schedules
   }
 
-  onMount(async () => {
-    await fetchSchedules()
-    console.log(rows)
-  })
+  const handleUpdateSchedule = async () => {
+    await updateSchedule({
+      variables: {
+        attrs: {
+        scheduleId: editItem.id,
+        message: editItem.message
+        }
+      },
+      refetchQueries: [{
+        query: SCHEDULES
+      }]
+    })
+  }
 
-	let open = false
+  let editItem = null
+
+  const openEditModal = (row) => {
+    editItem = row
+    open = true 
+  }
+
+  let createModal = false
+
+  const formData = {
+    message: ""
+  }
 </script>
 
 <svelte:head>
-	<title>Home</title>
+  <title>Home</title>
 </svelte:head>
 
-<DataTable sortable {headers} {rows}>
-  <span slot="cell" let:cell>
-    {#if cell.key === 'overflow'}
-      <OverflowMenu flipped>
-        <OverflowMenuItem text="Restart" on:click="{() => (open = true)}" />
-        <OverflowMenuItem
-          href="https://cloud.ibm.com/docs/loadbalancer-service"
-          text="API documentation"
-        />
-        <OverflowMenuItem danger text="Stop" />
-      </OverflowMenu>
-    {:else}{cell.value}{/if}
-  </span>
-</DataTable>
+{#if browser }
+  {#if $scheduleList.loading}
+    <DataTableSkeleton showHeader={false} showToolbar={false} size="tall" />
+  {:else}
+    <DataTable sortable {headers} rows={$scheduleList.data['schedules']} >
+
+      <Toolbar size="default">
+        <ToolbarContent>
+          <ToolbarMenu>
+            <ToolbarMenuItem primaryFocus>Restart all</ToolbarMenuItem>
+            <ToolbarMenuItem href="https://cloud.ibm.com/docs/loadbalancer-service">
+              API documentation
+            </ToolbarMenuItem>
+            <ToolbarMenuItem danger>Stop all</ToolbarMenuItem>
+          </ToolbarMenu>
+          <Button on:click={() => (createModal = true)}>Create Schedule</Button>
+        </ToolbarContent>
+      </Toolbar>
+      <span slot="cell" let:cell let:row>
+        {#if cell.key === 'overflow'}
+          <OverflowMenu flipped>
+            <OverflowMenuItem text="Edit" on:click="{() => openEditModal(row)}" />
+            <OverflowMenuItem danger text="Re-run" />
+            <OverflowMenuItem text="Delete" />
+          </OverflowMenu>
+        {:else}
+          {cell.value}
+        {/if}
+      </span>
+    </DataTable>
+  {/if}
+{/if}
 
 <Modal
-	modalHeading="Create database"
-	primaryButtonText="Confirm"
-	secondaryButtonText="Cancel"
-	bind:open
-	on:click:button--secondary
-	on:open
-	on:close
-	on:submit
+  modalHeading="Update Schedule"
+  primaryButtonText="Confirm"
+  secondaryButtonText="Cancel"
+  bind:open
+  on:click:button--secondary={() => (open = false)}
+  on:open
+  on:close
+  on:submit={ async () => ( await handleUpdateSchedule())}
 >
-  <p>Create a new Cloudant database in the US South region.</p>
-  <TextInput labelText="User name" placeholder="Enter user name..." />
+  {#if editItem}
+    <p>ID: </p>
+    <TextInput bind:value="{editItem.id}" />
+    <p>Message: </p>
+    <TextInput bind:value="{editItem.message}" />
+  {/if}
+</Modal>
+
+<Modal
+  modalHeading="Create Schedule"
+  primaryButtonText="Confirm"
+  secondaryButtonText="Cancel"
+  bind:open={createModal}
+  on:click:button--secondary={() => (createModal = false)}
+  on:open
+  on:close
+  on:submit={ async () => ( await submitSchedule())}
+>
+  <p>Message:</p>
+  <TextInput bind:value="{formData.message}" />
 </Modal>

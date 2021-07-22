@@ -31,6 +31,8 @@
   let isSideNavOpen: boolean = false
   let openRegisterForm = false
 
+  setClient(client)
+
   type FormData = {
     email: string
     password: string
@@ -45,11 +47,6 @@
 
   $: path = $page.path
 
-  setClient(client)
-
-  onMount(() => {
-    console.log($session.user)
-  })
 
   const register = async () => {
     const {
@@ -59,10 +56,9 @@
       variables: { ...formData }
     })
 
-    console.log(authenticate)
-
     if (authenticate.successful) {
       $session.user = authenticate.result
+      localStorage.setItem('token', authenticate.result.token)
     }
 
     await goto('/')
@@ -77,20 +73,20 @@
   <div slot="skip-to-content">
     <SkipToContent />
   </div>
-
-  <SideNav bind:open={isSideNavOpen}>
-    <SideNavItems>
-      {#each router as {name, url}}
-        <SideNavLink text="{name}" href="{url}" isSelected="{path === name}" />
-      {/each}
-    </SideNavItems>
-  </SideNav>
   <HeaderUtilities>
     <HeaderNav>
       <HeaderNavItem text="Register" on:click={() => (openRegisterForm = true)}/>
     </HeaderNav>
   </HeaderUtilities>
 </Header>
+
+<SideNav bind:isOpen={isSideNavOpen}>
+  <SideNavItems>
+    {#each router as {name, url}}
+      <SideNavLink text="{name}" href="{url}" isSelected="{path === name}" />
+    {/each}
+  </SideNavItems>
+</SideNav>
 
 <Content>
   <Grid>

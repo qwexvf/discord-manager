@@ -1,9 +1,8 @@
 defmodule DiscordManagerWeb.Plugs.Context do
   @behaviour Plug
-
   import Plug.Conn
 
-  alias TeamRecruit.Guardian
+  alias DiscordManager.Guardian
 
   def init(opts), do: opts
 
@@ -23,7 +22,8 @@ defmodule DiscordManagerWeb.Plugs.Context do
     do
       %{current_user: user}
     else
-      _ -> %{}
+      _ ->
+        %{}
     end
   end
 end

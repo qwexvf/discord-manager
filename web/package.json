@@ -26,7 +26,8 @@
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
-    "typescript": "^4.0.0"
+    "typescript": "^4.0.0",
+    "svelte-apollo": "^0.4.0"
   },
   "type": "module",
   "dependencies": {
@@ -38,6 +39,6 @@
     "carbon-icons-svelte": "^10.35.0",
     "cookie": "^0.4.1",
     "graphql": "^15.5.1",
-    "svelte-apollo": "^0.4.0"
+    "svelte-split-pane": "^0.1.2"
   }
 }

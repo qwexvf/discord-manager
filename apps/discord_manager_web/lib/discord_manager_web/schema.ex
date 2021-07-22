@@ -17,6 +17,10 @@ defmodule DiscordManagerWeb.Schema do
     import_fields :schedule_mutations
   end
 
+  subscription do
+    import_fields :scheduler_subscriptions
+  end
+
   def context(ctx) do
     loader =
       Dataloader.new()
