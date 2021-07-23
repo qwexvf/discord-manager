@@ -105,10 +105,13 @@ defmodule DiscordManager.Accounts do
   def sign_in(%{email: email, password: pass}) do
     User
     |> Repo.get_by(email: email)
+    |> (fn user -> Map.put(user, :password_hash, user.encrpyted_password) end).()
     |> verify_pass(pass)
   end
 
-  defp verify_pass(nil, _), do: {:error, "Incorrect email or password."}
+  defp verify_pass(nil, _) do
+    {:error, "Incorrect email or password."}
+  end
   defp verify_pass(user, plain_text_password) do
     case Argon2.verify_pass(plain_text_password, user.password_hash) do
       true -> {:ok, user}

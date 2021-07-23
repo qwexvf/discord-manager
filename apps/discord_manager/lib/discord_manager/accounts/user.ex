@@ -6,6 +6,7 @@ defmodule DiscordManager.Accounts.User do
     field :email, :string
     field :encrpyted_password, :string
     field :password, :string, virtual: true
+    field :password_hash, :string, virtual: true
     field :name, :string
 
     has_many :schedules, DiscordManager.Servers.Schedule

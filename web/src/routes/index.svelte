@@ -78,9 +78,11 @@
 </svelte:head>
 
 {#if browser }
-  {#if $scheduleList.loading}
+  {#if $scheduleList.loading && !$scheduleList}
     <DataTableSkeleton showHeader={false} showToolbar={false} size="tall" />
-  {:else}
+  {:else if $scheduleList.error}
+    <DataTableSkeleton showHeader={false} showToolbar={false} size="tall" />
+  {:else if $scheduleList.data}
     <DataTable sortable {headers} rows={$scheduleList.data['schedules']} >
 
       <Toolbar size="default">

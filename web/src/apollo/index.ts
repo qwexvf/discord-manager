@@ -4,7 +4,7 @@ import { session } from "$app/stores"
 import { setContext } from "@apollo/client/link/context"
  
 const httpLink = new HttpLink({
-  uri: "http://192.168.2.102:4000/graphql"
+  uri: "http://192.168.2.103:4000/graphql"
 })
 
 const authLink = setContext((_, { headers }) => {
@@ -17,7 +17,7 @@ const authLink = setContext((_, { headers }) => {
       Authorization: token ? `Bearer ${token}` : "",
     }
   }
-});
+})
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)

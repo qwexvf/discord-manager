@@ -23,8 +23,8 @@
   } from "carbon-components-svelte"
   import { goto } from "$app/navigation"
   import { client } from "../apollo"
-  import { setClient } from "svelte-apollo"
-  import { AUTHENTICATE_MUTAITON } from "../apollo/mutations"
+  import { mutation, setClient, query } from "svelte-apollo"
+  import { REGISTER_MUTATION, LOGIN_MUTATION } from "../apollo/mutations"
   import router from "../router"
   import { session } from "$app/stores"
 
@@ -47,12 +47,13 @@
 
   $: path = $page.path
 
+  let mode = 'login'
 
   const register = async () => {
     const {
       data: { authenticate }
     } = await client.mutate({
-      mutation: AUTHENTICATE_MUTAITON,
+      mutation: REGISTER_MUTATION,
       variables: { ...formData }
     })
 
@@ -63,6 +64,32 @@
 
     await goto('/')
   } 
+
+  const handleLogin = mutation(LOGIN_MUTATION)
+
+  const login = async () => {
+    const result = await handleLogin({
+      variables: { ...formData }
+    })
+
+    const login = result.data
+
+    if (login["login"]["successful"]) {
+      $session.user = login["login"]["result"]["user"]
+      localStorage.setItem('token', login["login"]["result"]["token"])
+    }
+
+    await goto('/')
+  } 
+
+  async function submitForm() {
+    console.log(mode)
+    if (mode === 'login') {
+      await login()
+    } else {
+      await register()
+    }
+  }
 </script>
 
 <Header
@@ -103,14 +130,33 @@
   modalHeading="Login/Resiger"
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (openRegisterForm = false)} on:open
+  on:click:button--secondary={() => (openRegisterForm = false)}
+  on:open
   on:close
-  on:submit="{register}">
+  on:submit="{() => submitForm()}">
+
   <Form on:submit>
-    <FormGroup>
-      <TextInput bind:value="{formData.email}" labelText="Email" placeholder="Enter email..." />
-      <PasswordInput bind:value="{formData.password}" labelText="Password" placeholder="Enter password..." />
-      <PasswordInput bind:value="{formData.passwordConfirm}" labelText="Password" placeholder="Enter password..." />
-    </FormGroup>
+    {#if mode === 'login'}
+      <FormGroup>
+        <TextInput bind:value="{formData.email}" labelText="Email" placeholder="Enter email..." />
+        <PasswordInput bind:value="{formData.password}" labelText="Password" placeholder="Enter password..." />
+      </FormGroup>
+    {:else}
+      <FormGroup>
+        <TextInput
+          bind:value="{formData.email}"
+          labelText="Email"
+          placeholder="Enter email..." />
+        <PasswordInput
+          bind:value="{formData.password}"
+          labelText="Password"
+          placeholder="Enter password..." />
+        <PasswordInput
+          bind:value="{formData.passwordConfirm}"
+          labelText="Password"
+          placeholder="Enter password..."
+        />
+      </FormGroup>
+    {/if}
   </Form>
 </Modal>

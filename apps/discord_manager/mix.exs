@@ -1,6 +1,6 @@
 defmodule DiscordManager.MixProject do
   use Mix.Project
-def project do
+  def project do
     [
       app: :discord_manager,
       version: "0.1.0",
