@@ -23,7 +23,7 @@
   } from "carbon-components-svelte"
   import { goto } from "$app/navigation"
   import { client } from "../apollo"
-  import { mutation, setClient, query } from "svelte-apollo"
+  import { mutation, setClient, query, subscribe } from "svelte-apollo"
   import { REGISTER_MUTATION, LOGIN_MUTATION } from "../apollo/mutations"
   import router from "../router"
   import { session } from "$app/stores"
@@ -102,7 +102,9 @@
   </div>
   <HeaderUtilities>
     <HeaderNav>
-      <HeaderNavItem text="Register" on:click={() => (openRegisterForm = true)}/>
+      {#if !$session.user}
+        <HeaderNavItem text="Register" on:click={() => (openRegisterForm = true)}/>
+      {/if}
     </HeaderNav>
   </HeaderUtilities>
 </Header>

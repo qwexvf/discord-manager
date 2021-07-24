@@ -10,7 +10,12 @@
     ToolbarContent,
     ToolbarMenu,
     ToolbarMenuItem,
-    DataTableSkeleton
+    DataTableSkeleton,
+    DatePicker,
+    DatePickerInput,
+    TimePicker,
+    TimePickerSelect,
+    SelectItem,
   } from "carbon-components-svelte"
   import { SCHEDULES } from "../apollo/queries"
   import { UPDATE_SCHEDULE, CREATE_SCHEDULE } from "../apollo/mutations"
@@ -142,4 +147,13 @@
 >
   <p>Message:</p>
   <TextInput bind:value="{formData.message}" />
+  <DatePicker datePickerType="single" on:change>
+    <DatePickerInput labelText="Send on" placeholder="mm/dd/yyyy" />
+  </DatePicker>
+  <TimePicker labelText="Cron job" placeholder="hh:mm">
+  <TimePickerSelect value="PM">
+    <SelectItem value="am" text="AM" />
+    <SelectItem value="pm" text="PM" />
+  </TimePickerSelect>
+</TimePicker>
 </Modal>

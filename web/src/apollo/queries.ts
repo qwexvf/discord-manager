@@ -11,3 +11,15 @@ query schedules {
   }
 }
 `
+
+export const NEW_SCHEDULES = gql`
+query schedules {
+  schedules {
+    id
+    message
+    job {
+      state
+    }
+  }
+}
+`
